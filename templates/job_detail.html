@@ -1,0 +1,251 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ job.title }} at {{ job.company }} | Job Portal{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <!-- Breadcrumbs -->
+  <nav class="flex items-center space-x-2 text-xs text-slate-400 mb-6 font-medium">
+    <a href="{{ url_for('jobs') }}" class="hover:text-indigo-400 transition"><i class="fa-solid fa-arrow-left mr-1"></i> Back to All Jobs</a>
+    <span>/</span>
+    <span class="text-slate-200">{{ job.company }}</span>
+    <span>/</span>
+    <span class="text-indigo-400 font-semibold">{{ job.title }}</span>
+  </nav>
+
+  <!-- Job Header Card -->
+  <div class="p-8 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl mb-10">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-800">
+      <div class="flex items-start space-x-5">
+        <div class="w-16 h-16 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center text-3xl font-bold text-indigo-400 overflow-hidden flex-shrink-0">
+          {% if job.company_logo %}
+            <img src="{{ job.company_logo }}" alt="{{ job.company }}" class="w-11 h-11 object-contain" onerror="this.src=''; this.parentElement.textContent='{{ job.company[0] }}';">
+          {% else %}
+            {{ job.company[0] }}
+          {% endif %}
+        </div>
+        <div>
+          <div class="flex flex-wrap items-center gap-2 mb-2">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">{{ job.category }}</span>
+            <span class="px-2.5 py-0.5 rounded text-xs font-medium bg-slate-800 text-slate-300">{{ job.job_type }}</span>
+            <span class="px-2.5 py-0.5 rounded text-xs font-medium bg-slate-800 text-slate-300">{{ job.experience }}</span>
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-white">{{ job.title }}</h1>
+          <p class="text-sm text-slate-400 mt-1">
+            <strong class="text-slate-200">{{ job.company }}</strong> &bull; <i class="fa-solid fa-location-dot mr-1 text-slate-500"></i>{{ job.location }}
+          </p>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:items-end justify-center">
+        <span class="text-xl sm:text-2xl font-extrabold text-emerald-400 font-mono">{{ job.salary }}</span>
+        <span class="text-xs text-slate-400 mt-1"><i class="fa-regular fa-clock mr-1"></i>Apply by: <strong class="text-slate-200">{{ job.deadline or 'Rolling Basis' }}</strong></span>
+      </div>
+    </div>
+
+    <!-- Quick Attributes Row -->
+    <div class="pt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs text-slate-400">
+      <div>
+        <span class="block text-slate-500 mb-1">Eligibility</span>
+        <span class="font-medium text-slate-200">{{ job.eligibility or 'All eligible degrees' }}</span>
+      </div>
+      <div>
+        <span class="block text-slate-500 mb-1">Work Model</span>
+        <span class="font-medium text-slate-200">{{ job.location }}</span>
+      </div>
+      <div>
+        <span class="block text-slate-500 mb-1">Employment Type</span>
+        <span class="font-medium text-slate-200">{{ job.job_type }}</span>
+      </div>
+      <div>
+        <span class="block text-slate-500 mb-1">Posted</span>
+        <span class="font-medium text-slate-200">{{ job.created_at.strftime('%b %d, %Y') if job.created_at else 'Recently' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Layout: 2 Columns (Main Details & Sidebar) -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <!-- Main Content -->
+    <div class="lg:col-span-8 space-y-8">
+      
+      <!-- Role Description -->
+      <div class="p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+        <h2 class="text-lg font-bold text-white mb-4 flex items-center">
+          <i class="fa-solid fa-align-left text-indigo-400 mr-2.5 text-base"></i> About the Role &amp; Team
+        </h2>
+        <p class="text-sm text-slate-300 leading-relaxed whitespace-pre-line">
+          {{ job.description }}
+        </p>
+      </div>
+
+      <!-- Key Responsibilities -->
+      {% if job.responsibilities %}
+      <div class="p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+        <h2 class="text-lg font-bold text-white mb-4 flex items-center">
+          <i class="fa-solid fa-list-check text-indigo-400 mr-2.5 text-base"></i> Key Responsibilities
+        </h2>
+        <ul class="space-y-2.5 text-sm text-slate-300">
+          {% for resp in job.responsibilities.split('\n') %}
+            {% if resp.strip() %}
+            <li class="flex items-start">
+              <i class="fa-solid fa-circle-check text-emerald-400 mt-1 mr-2.5 text-xs flex-shrink-0"></i>
+              <span>{{ resp.strip() }}</span>
+            </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      <!-- Requirements & Qualifications -->
+      {% if job.requirements %}
+      <div class="p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+        <h2 class="text-lg font-bold text-white mb-4 flex items-center">
+          <i class="fa-solid fa-certificate text-indigo-400 mr-2.5 text-base"></i> Qualifications &amp; Skills Required
+        </h2>
+        <ul class="space-y-2.5 text-sm text-slate-300">
+          {% for req in job.requirements.split('\n') %}
+            {% if req.strip() %}
+            <li class="flex items-start">
+              <i class="fa-solid fa-arrow-right text-indigo-400 mt-1 mr-2.5 text-xs flex-shrink-0"></i>
+              <span>{{ req.strip() }}</span>
+            </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+
+      <!-- Tech Stack / Skills Required -->
+      <div class="p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+        <h2 class="text-lg font-bold text-white mb-4 flex items-center">
+          <i class="fa-solid fa-tags text-indigo-400 mr-2.5 text-base"></i> Relevant Technologies &amp; Competencies
+        </h2>
+        <div class="flex flex-wrap gap-2">
+          {% for skill in job.skills.split(',') %}
+          <span class="px-3 py-1.5 rounded-lg text-xs font-mono font-medium bg-slate-800 text-slate-200 border border-slate-700">
+            {{ skill.strip() }}
+          </span>
+          {% endfor %}
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Sidebar: Fast Apply & Recommendations -->
+    <div class="lg:col-span-4 space-y-6">
+      <!-- Fast Apply Box -->
+      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl sticky top-24">
+        <h3 class="text-base font-bold text-white mb-2">Interested in this role?</h3>
+        <p class="text-xs text-slate-400 mb-6 leading-relaxed">
+          Submit your application directly through Job Portal to have your profile reviewed by recruiting coordinators.
+        </p>
+
+        <button data-job-id="{{ job.id }}" data-job-title="{{ job.title }}" data-company="{{ job.company }}" onclick="openApplyModalFromBtn(this)" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm shadow-lg shadow-indigo-600/30 transition flex items-center justify-center">
+          <i class="fa-solid fa-paper-plane mr-2"></i> Apply for this Job
+        </button>
+
+        <div class="mt-6 pt-6 border-t border-slate-800 space-y-3 text-xs text-slate-400">
+          <div class="flex items-center justify-between">
+            <span>Interview Prep</span>
+            <a href="{{ url_for('prep') }}" class="text-indigo-400 hover:underline font-medium">Practice Aptitude &amp; CS</a>
+          </div>
+          <div class="flex items-center justify-between">
+            <span>Coding Practice</span>
+            <a href="{{ url_for('dsa') }}" class="text-cyan-400 hover:underline font-medium">Solve SDE Sheet</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Similar Jobs -->
+      {% if similar_jobs %}
+      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+        <h3 class="text-sm font-bold text-slate-200 mb-4 uppercase tracking-wider text-xs">Similar Openings</h3>
+        <div class="space-y-4">
+          {% for sj in similar_jobs %}
+          <div class="pb-3 border-b border-slate-800 last:border-b-0 last:pb-0">
+            <h4 class="text-xs font-bold text-white hover:text-indigo-400 transition">
+              <a href="{{ url_for('job_detail', job_id=sj.id) }}">{{ sj.title }}</a>
+            </h4>
+            <p class="text-[11px] text-slate-400 mt-0.5">{{ sj.company }} &bull; {{ sj.salary }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+
+<!-- Include candidate application modal -->
+<div id="apply-job-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden modal-enter">
+    <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+      <div>
+        <h3 class="text-lg font-bold text-white">Apply for Position</h3>
+        <p class="text-xs text-slate-400 mt-0.5"><span id="apply-modal-job-title" class="text-indigo-400 font-semibold"></span> at <span id="apply-modal-company" class="text-slate-200"></span></p>
+      </div>
+      <button onclick="closeApplyModal()" class="text-slate-400 hover:text-white p-1 transition">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+    </div>
+    
+    <form id="apply-job-form" class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Full Name *</label>
+        <input type="text" name="applicant_name" required placeholder="e.g. Rahul Sharma" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Email *</label>
+          <input type="email" name="email" required placeholder="rahul@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Phone Number *</label>
+          <input type="tel" name="phone" required placeholder="+91 9876543210" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">College / Institute</label>
+          <input type="text" name="college" placeholder="IIT / NIT / BITS / State Univ" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Graduation Batch</label>
+          <input type="text" name="grad_year" placeholder="2025 / 2026 / 2027" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Resume Link (Google Drive / Dropbox) *</label>
+        <input type="url" name="resume_link" required placeholder="https://drive.google.com/your-resume-pdf" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">GitHub Profile</label>
+          <input type="url" name="github_url" placeholder="https://github.com/username" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">LinkedIn Profile</label>
+          <input type="url" name="linkedin_url" placeholder="https://linkedin.com/in/username" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Cover Note</label>
+        <textarea name="cover_note" rows="2" placeholder="Briefly highlight your core technical skills and relevant projects..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"></textarea>
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex justify-end space-x-3">
+        <button type="button" onclick="closeApplyModal()" class="px-4 py-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-semibold">Cancel</button>
+        <button type="submit" class="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md shadow-indigo-600/30">Submit Application</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/jobs.js') }}"></script>
+{% endblock %}

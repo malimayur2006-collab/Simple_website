@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Companies Hiring Process: Exam Patterns, Syllabus & Eligibility | Job Portal{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <!-- Header Section -->
+  <div class="text-center max-w-3xl mx-auto mb-10">
+    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold mb-3">
+      <i class="fa-solid fa-building"></i>
+      <span>Recruitment Blueprints &amp; Exam Patterns</span>
+    </div>
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Company-Wise Hiring Process</h1>
+    <p class="text-sm text-slate-400 mt-2 leading-relaxed">
+      Detailed recruitment guides featuring exact online test patterns, section-wise durations, academic eligibility cutoffs, comprehensive syllabus, and candidate interview advice.
+    </p>
+  </div>
+
+  <!-- Search & Category Filters -->
+  <div class="my-8 p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl">
+    <form method="GET" action="{{ url_for('companies') }}" class="flex flex-col sm:flex-row items-center justify-between gap-4">
+      <!-- Search Input -->
+      <div class="relative w-full sm:w-80">
+        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+        <input type="text" name="q" value="{{ query }}" placeholder="Search company by name..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500">
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="flex flex-wrap items-center gap-2">
+        <a href="{{ url_for('companies') }}" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition {% if not selected_cat %}bg-indigo-600 text-white{% else %}bg-slate-950 text-slate-400 hover:text-white border border-slate-800{% endif %}">
+          All Companies
+        </a>
+        {% for cat in categories %}
+        <a href="{{ url_for('companies', category=cat) }}" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition {% if selected_cat == cat %}bg-indigo-600 text-white{% else %}bg-slate-950 text-slate-400 hover:text-white border border-slate-800{% endif %}">
+          {{ cat }}
+        </a>
+        {% endfor %}
+      </div>
+    </form>
+  </div>
+
+  <!-- Companies Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {% for comp in companies %}
+    <div class="p-6 rounded-3xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition flex flex-col justify-between card-hover shadow-xl">
+      <div>
+        <!-- Top bar -->
+        <div class="flex items-center justify-between mb-4">
+          <span class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-slate-300 border border-slate-700">
+            {{ comp.category }}
+          </span>
+          <span class="text-xs font-semibold px-2.5 py-0.5 rounded-full {{ 'bg-rose-500/10 text-rose-400 border border-rose-500/20' if comp.difficulty_level == 'Hard' else 'bg-amber-500/10 text-amber-400 border border-amber-500/20' }}">
+            {{ comp.difficulty_level }}
+          </span>
+        </div>
+
+        <!-- Name & CTC -->
+        <h2 class="text-xl font-bold text-white mb-1">
+          <a href="{{ url_for('company_detail', slug=comp.slug) }}" class="hover:text-indigo-400 transition">{{ comp.name }}</a>
+        </h2>
+        <div class="text-xs font-mono font-bold text-emerald-400 mb-3">{{ comp.ctc_range }}</div>
+
+        <p class="text-xs text-slate-400 leading-relaxed mb-4">
+          {{ comp.tagline }}
+        </p>
+
+        <!-- Eligibility Box -->
+        <div class="p-3 bg-slate-950/70 rounded-xl border border-slate-800/80 text-xs text-slate-300 mb-4">
+          <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-0.5">Eligibility Cutoff</span>
+          <span>{{ comp.eligibility_summary }}</span>
+        </div>
+      </div>
+
+      <!-- Footer CTA -->
+      <div class="pt-4 border-t border-slate-800">
+        <a href="{{ url_for('company_detail', slug=comp.slug) }}" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs transition border border-slate-700 flex items-center justify-center group">
+          <span>View Exam Pattern &amp; Syllabus</span>
+          <i class="fa-solid fa-arrow-right ml-2 text-[10px] group-hover:translate-x-1 transition"></i>
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

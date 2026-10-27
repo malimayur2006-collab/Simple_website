@@ -1,0 +1,288 @@
+{% extends 'base.html' %}
+
+{% block title %}Dedicated Topic-Wise DSA Preparation Sheet | Job Portal{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <!-- Header Section -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between pb-8 border-b border-slate-800 gap-4">
+    <div>
+      <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold mb-2">
+        <i class="fa-solid fa-code"></i>
+        <span>SDE Interview Coding Sheet</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Dedicated DSA Preparation Sheet</h1>
+      <p class="text-sm text-slate-400 mt-1">Crack coding rounds at Amazon, Google, Microsoft, TCS Digital &amp; Startups with structured topic-wise problems.</p>
+    </div>
+
+    <!-- Overall Progress Badge Card -->
+    <div class="p-4 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl min-w-[280px]">
+      <div class="flex items-center justify-between text-xs mb-2">
+        <span class="font-semibold text-slate-300">Progress Tracker</span>
+        <span id="overall-dsa-percent" class="font-mono font-bold text-cyan-400 text-sm">{{ percentage }}%</span>
+      </div>
+      <div class="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden mb-2">
+        <div id="overall-dsa-bar" class="h-full bg-gradient-to-r from-cyan-500 to-indigo-500 rounded-full transition-all duration-300" style="width: {{ percentage }}%;"></div>
+      </div>
+      <div class="flex items-center justify-between text-[11px] text-slate-400">
+        <span><strong id="overall-dsa-solved" class="text-white">{{ solved_count }}</strong> of {{ total_count }} Solved</span>
+        <span class="text-emerald-400 font-medium"><i class="fa-solid fa-circle-check mr-1"></i>Realtime Sync</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Search & Filter Controls -->
+  <div class="my-8 p-5 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl flex flex-col md:flex-row items-center justify-between gap-4">
+    <!-- Search Bar -->
+    <div class="relative w-full md:w-80">
+      <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-sm"></i>
+      <input type="text" id="dsa-search-input" oninput="applyDSAFilters()" placeholder="Filter problems by title or topic..." class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500">
+    </div>
+
+    <!-- Filters: Difficulty & Status -->
+    <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+      <div>
+        <select id="dsa-diff-filter" onchange="applyDSAFilters()" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-cyan-500">
+          <option value="all">All Difficulties</option>
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+        </select>
+      </div>
+
+      <div>
+        <select id="dsa-status-filter" onchange="applyDSAFilters()" class="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-cyan-500">
+          <option value="all">All Status</option>
+          <option value="solved">Solved Only</option>
+          <option value="unsolved">Unsolved Only</option>
+          <option value="revision">Marked for Revision</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Topic-Wise Problem Groups -->
+  <div class="space-y-8">
+    {% for t in topics %}
+      {% set topic_problems = problems | selectattr('topic', 'equalto', t) | list %}
+      {% if topic_problems %}
+      <div class="rounded-3xl bg-slate-900 border border-slate-800 overflow-hidden shadow-xl" id="topic-group-{{ loop.index }}">
+        <!-- Topic Header -->
+        <div class="p-5 sm:p-6 bg-slate-800/40 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center space-x-3">
+            <span class="w-8 h-8 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-xs font-mono">
+              {{ loop.index }}
+            </span>
+            <div>
+              <h2 class="text-lg font-bold text-white">{{ t }}</h2>
+              <span class="text-xs text-slate-400">{{ topic_problems|length }} Problems in this topic</span>
+            </div>
+          </div>
+
+          <!-- Topic Mini Meter -->
+          <div class="flex items-center space-x-3">
+            <span class="text-xs text-slate-400 font-mono">{{ topic_stats[t].solved }}/{{ topic_stats[t].total }} solved ({{ topic_stats[t].percent }}%)</span>
+            <div class="w-24 h-2 bg-slate-800 rounded-full overflow-hidden">
+              <div class="h-full bg-cyan-500 rounded-full" style="width: {{ topic_stats[t].percent }}%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Problems Table -->
+        <div class="divide-y divide-slate-800/60 overflow-x-auto">
+          {% for p in topic_problems %}
+            {% set user_prog = progress_map.get(p.id) %}
+            {% set is_sol = user_prog.is_solved if user_prog else False %}
+            {% set is_rev = user_prog.is_revision if user_prog else False %}
+
+            <div id="dsa-row-{{ p.id }}" 
+                 data-title="{{ p.title }}" 
+                 data-diff="{{ p.difficulty }}" 
+                 data-solved="{{ 'true' if is_sol else 'false' }}" 
+                 data-revision="{{ 'true' if is_rev else 'false' }}"
+                 class="dsa-problem-row p-4 sm:p-5 flex items-center justify-between gap-4 transition hover:bg-slate-800/40 {% if is_sol %}bg-emerald-950/20{% endif %}">
+              
+              <!-- Checkbox & Title -->
+              <div class="flex items-center space-x-4 flex-1 min-w-[260px]">
+                <input type="checkbox" 
+                       id="check-{{ p.id }}"
+                       {% if is_sol %}checked{% endif %}
+                       onchange="toggleProblemSolved({{ p.id }}, this)"
+                       class="w-5 h-5 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-0 cursor-pointer accent-emerald-500">
+                
+                <div>
+                  <div class="flex items-center space-x-2">
+                    <span class="text-sm font-semibold text-slate-100 hover:text-cyan-400 transition cursor-pointer"
+                          onclick="openSolutionModal({{ p.id }})">
+                      {{ p.title }}
+                    </span>
+                    {% if p.leetcode_url %}
+                    <a href="{{ p.leetcode_url }}" target="_blank" rel="noopener noreferrer" title="View on LeetCode" class="text-slate-500 hover:text-amber-400 text-xs transition">
+                      <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    </a>
+                    {% endif %}
+                  </div>
+                  <div class="flex items-center space-x-3 text-[11px] text-slate-400 mt-0.5">
+                    <span>Time: <code class="font-mono text-slate-300">{{ p.time_complexity or 'O(N)' }}</code></span>
+                    <span>&bull;</span>
+                    <span>Space: <code class="font-mono text-slate-300">{{ p.space_complexity or 'O(1)' }}</code></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Difficulty Badge -->
+              <div class="flex-shrink-0">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ 'badge-easy' if p.difficulty == 'Easy' else 'badge-medium' if p.difficulty == 'Medium' else 'badge-hard' }}">
+                  {{ p.difficulty }}
+                </span>
+              </div>
+
+              <!-- Actions: Solution Modal, Revision Star, Personal Notes -->
+              <div class="flex items-center space-x-2 flex-shrink-0">
+                <!-- Revision Star -->
+                <button onclick="toggleProblemRevision({{ p.id }}, this)" 
+                        title="{{ 'Marked for Revision' if is_rev else 'Add to Revision' }}"
+                        class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm transition">
+                  {% if is_rev %}
+                    <i class="fa-solid fa-star text-amber-400"></i>
+                  {% else %}
+                    <i class="fa-regular fa-star text-slate-500 hover:text-amber-400"></i>
+                  {% endif %}
+                </button>
+
+                <!-- Personal Notes Button -->
+                <button onclick="openNotesModal({{ p.id }})" 
+                        title="Personal Notes"
+                        class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm text-slate-400 hover:text-cyan-400 transition">
+                  <i class="fa-regular fa-note-sticky"></i>
+                </button>
+
+                <!-- View Code & Solution -->
+                <button onclick="openSolutionModal({{ p.id }})" 
+                        class="px-3 py-1.5 rounded-lg bg-indigo-600/30 hover:bg-indigo-600 text-indigo-300 hover:text-white border border-indigo-500/30 text-xs font-semibold transition flex items-center">
+                  <i class="fa-solid fa-code mr-1.5"></i> Solution
+                </button>
+              </div>
+
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+</div>
+
+<!-- Solution & Code Snippets Modal -->
+<div id="dsa-solution-modal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-slate-900 border border-slate-700 rounded-3xl w-full max-w-3xl shadow-2xl overflow-hidden modal-enter max-h-[90vh] flex flex-col">
+    <!-- Header -->
+    <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+      <div>
+        <div class="flex items-center space-x-2 mb-1">
+          <span id="sol-modal-topic" class="text-xs font-semibold text-cyan-400 uppercase tracking-wider">Topic</span>
+          <span id="sol-modal-difficulty" class="px-2 py-0.5 rounded text-xs font-semibold">Difficulty</span>
+        </div>
+        <h3 id="sol-modal-title" class="text-xl font-bold text-white">Problem Title</h3>
+      </div>
+      <div class="flex items-center space-x-3">
+        <a id="sol-modal-leetcode" href="#" target="_blank" class="px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-semibold border border-amber-500/20 hover:bg-amber-500/20 transition flex items-center">
+          LeetCode <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-[10px]"></i>
+        </a>
+        <button onclick="closeSolutionModal()" class="text-slate-400 hover:text-white p-1 transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Scrollable Body -->
+    <div class="p-6 overflow-y-auto space-y-6 flex-1 text-sm text-slate-300">
+      
+      <!-- Problem Statement -->
+      <div>
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Problem Statement</h4>
+        <div id="sol-modal-desc" class="p-4 rounded-xl bg-slate-950/70 border border-slate-800 text-xs sm:text-sm text-slate-200 leading-relaxed font-sans">
+        </div>
+      </div>
+
+      <!-- Optimal Intuition & Approach -->
+      <div>
+        <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Optimal Approach &amp; Intuition</h4>
+        <div id="sol-modal-approach" class="p-4 rounded-xl bg-slate-950/70 border border-slate-800 text-xs sm:text-sm text-slate-300 leading-relaxed">
+        </div>
+      </div>
+
+      <!-- Complexities -->
+      <div class="grid grid-cols-2 gap-4">
+        <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800">
+          <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Time Complexity</span>
+          <code id="sol-modal-time" class="text-sm font-mono font-bold text-emerald-400">O(N)</code>
+        </div>
+        <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800">
+          <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-1">Space Complexity</span>
+          <code id="sol-modal-space" class="text-sm font-mono font-bold text-cyan-400">O(1)</code>
+        </div>
+      </div>
+
+      <!-- Multi-Language Code Tabs -->
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex space-x-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+            <button onclick="switchCodeTab('python')" data-lang="python" class="code-tab-btn px-3 py-1 rounded-lg text-xs font-semibold transition">Python</button>
+            <button onclick="switchCodeTab('cpp')" data-lang="cpp" class="code-tab-btn px-3 py-1 rounded-lg text-xs font-semibold transition">C++</button>
+            <button onclick="switchCodeTab('java')" data-lang="java" class="code-tab-btn px-3 py-1 rounded-lg text-xs font-semibold transition">Java</button>
+          </div>
+          <button onclick="copyCurrentCode()" class="text-xs text-slate-400 hover:text-white px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 transition flex items-center">
+            <i class="fa-regular fa-copy mr-1.5"></i> Copy Code
+          </button>
+        </div>
+
+        <pre class="p-4 rounded-2xl bg-slate-950 border border-slate-800 overflow-x-auto"><code id="sol-modal-code" class="text-xs font-mono text-emerald-300"></code></pre>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="p-4 border-t border-slate-800 bg-slate-950/50 flex justify-end">
+      <button onclick="closeSolutionModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold transition">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Personal Notes Modal -->
+<div id="dsa-notes-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden modal-enter">
+    <div class="p-5 border-b border-slate-800 flex items-center justify-between">
+      <div>
+        <h3 class="text-base font-bold text-white">Personal Study Notes</h3>
+        <p id="notes-modal-title" class="text-xs text-indigo-400 font-semibold mt-0.5"></p>
+      </div>
+      <button onclick="closeNotesModal()" class="text-slate-400 hover:text-white p-1 transition">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+    </div>
+
+    <div class="p-5 space-y-4">
+      <p class="text-xs text-slate-400">Jot down personal corner-case reminders, interview pitfalls, or quick intuition notes for revision:</p>
+      <textarea id="notes-modal-textarea" rows="5" placeholder="e.g. Always check if nums is empty; remember to reset current_sum when negative..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs sm:text-sm text-slate-200 focus:outline-none focus:border-cyan-500 font-mono"></textarea>
+
+      <div class="flex justify-end space-x-3 pt-2">
+        <button onclick="closeNotesModal()" class="px-4 py-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-semibold">Cancel</button>
+        <button onclick="savePersonalNote()" class="px-5 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold shadow-md shadow-cyan-600/30">Save Notes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Embedded JSON Data for Client Modal Popups -->
+<script id="dsa-data" type="application/json">
+  {{ problems_json | safe }}
+</script>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/dsa.js') }}"></script>
+{% endblock %}

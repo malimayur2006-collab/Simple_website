@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ company.name }} Hiring Process: Exam Pattern, Syllabus & Eligibility | Job Portal{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <!-- Breadcrumbs -->
+  <nav class="flex items-center space-x-2 text-xs text-slate-400 mb-6 font-medium">
+    <a href="{{ url_for('companies') }}" class="hover:text-indigo-400 transition"><i class="fa-solid fa-arrow-left mr-1"></i> Back to All Companies</a>
+    <span>/</span>
+    <span class="text-indigo-400 font-semibold">{{ company.name }}</span>
+  </nav>
+
+  <!-- Company Dossier Hero Header -->
+  <div class="p-8 sm:p-10 rounded-3xl bg-slate-900 border border-slate-800 shadow-xl mb-10">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-800">
+      <div>
+        <div class="flex items-center space-x-3 mb-2">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">{{ company.category }}</span>
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold {{ 'bg-rose-500/10 text-rose-400 border border-rose-500/20' if company.difficulty_level == 'Hard' else 'bg-amber-500/10 text-amber-400 border border-amber-500/20' }}">{{ company.difficulty_level }} Difficulty</span>
+        </div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-white">{{ company.name }}</h1>
+        <p class="text-sm text-slate-400 mt-1 max-w-2xl leading-relaxed">{{ company.tagline }}</p>
+      </div>
+
+      <div class="text-left md:text-right">
+        <span class="text-xs text-slate-400 block mb-1">Package Range (CTC)</span>
+        <span class="text-2xl sm:text-3xl font-extrabold text-emerald-400 font-mono">{{ company.ctc_range }}</span>
+      </div>
+    </div>
+
+    <!-- Quick stats grid -->
+    <div class="pt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-slate-300">
+      <div class="p-4 rounded-xl bg-slate-950/70 border border-slate-800">
+        <span class="block text-slate-500 font-semibold uppercase text-[10px] mb-1">Primary Eligibility</span>
+        <span class="font-medium text-slate-200">{{ company.eligibility_summary }}</span>
+      </div>
+      <div class="p-4 rounded-xl bg-slate-950/70 border border-slate-800">
+        <span class="block text-slate-500 font-semibold uppercase text-[10px] mb-1">Hiring Mode</span>
+        <span class="font-medium text-slate-200">On-Campus, NQT / National Qualifier &amp; Off-Campus</span>
+      </div>
+      <div class="p-4 rounded-xl bg-slate-950/70 border border-slate-800">
+        <span class="block text-slate-500 font-semibold uppercase text-[10px] mb-1">Evaluation Platform</span>
+        <span class="font-medium text-slate-200">TCS iON / HackerEarth / Codility / Mettle</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- Main Guides (8 cols) -->
+    <div class="lg:col-span-8 space-y-8">
+      
+      <!-- 1. Exam Pattern & Sections -->
+      <div class="p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+        <h2 class="text-xl font-bold text-white mb-4 flex items-center">
+          <i class="fa-solid fa-clock-rotate-left text-indigo-400 mr-2.5 text-base"></i> Exam Pattern &amp; Section Breakdown
+        </h2>
+        <div class="space-y-4">
+          {% for pattern in company.to_dict().exam_pattern %}
+          <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-sm font-bold text-white">{{ pattern.section }}</h3>
+              <span class="px-2.5 py-0.5 rounded text-xs font-mono font-semibold bg-indigo-500/20 text-indigo-300">{{ pattern.duration }}</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed mb-2"><strong class="text-slate-400">Sections &amp; Questions:</strong> {{ pattern.subsections }}</p>
+            <p class="text-xs text-slate-400"><strong class="text-slate-500">Marking Scheme:</strong> {{ pattern.marking }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- 2. Detailed Syllabus -->
+      <div class="p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+        <h2 class="text-xl font-bold text-white mb-4 flex items-center">
+          <i class="fa-solid fa-list-ol text-cyan-400 mr-2.5 text-base"></i> Comprehensive Syllabus
+        </h2>
+        <div class="space-y-3">
+          {% for subject, topics in company.to_dict().syllabus.items() %}
+          <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800">
+            <h3 class="text-sm font-bold text-indigo-400 mb-1">{{ subject }}</h3>
+            <p class="text-xs text-slate-300 leading-relaxed">{{ topics }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- 3. Roles & CTC Packages Breakdown -->
+      <div class="p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+        <h2 class="text-xl font-bold text-white mb-4 flex items-center">
+          <i class="fa-solid fa-money-bill-wave text-emerald-400 mr-2.5 text-base"></i> Packages &amp; Job Profiles
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {% for pkg in company.to_dict().packages %}
+          <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800">
+            <h3 class="text-sm font-bold text-white">{{ pkg.role }}</h3>
+            <div class="text-xs font-mono font-bold text-emerald-400 my-1">{{ pkg.ctc }}</div>
+            <p class="text-xs text-slate-400 leading-relaxed">{{ pkg.desc }}</p>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- 4. Selection Rounds -->
+      <div class="p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+        <h2 class="text-xl font-bold text-white mb-4 flex items-center">
+          <i class="fa-solid fa-route text-amber-400 mr-2.5 text-base"></i> Round-by-Round Selection Workflow
+        </h2>
+        <div class="space-y-3">
+          {% for round in company.to_dict().rounds %}
+          <div class="flex items-start space-x-3 p-3.5 rounded-xl bg-slate-950/80 border border-slate-800">
+            <div class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-xs flex-shrink-0">
+              {{ loop.index }}
+            </div>
+            <div>
+              <h3 class="text-xs font-bold text-white">{{ round.name }} ({{ round.round_num }})</h3>
+              <p class="text-xs text-slate-400 mt-0.5">{{ round.type }}</p>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- 5. Interview Strategy & Tips -->
+      <div class="p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+        <h2 class="text-xl font-bold text-white mb-4 flex items-center">
+          <i class="fa-solid fa-lightbulb text-yellow-400 mr-2.5 text-base"></i> Proven Interview Strategies &amp; Advice
+        </h2>
+        <ul class="space-y-2.5 text-xs text-slate-300">
+          {% for tip in company.to_dict().interview_tips %}
+          <li class="flex items-start">
+            <i class="fa-solid fa-star text-amber-400 mt-1 mr-2.5 text-[10px] flex-shrink-0"></i>
+            <span class="leading-relaxed">{{ tip }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- 6. Sample Frequently Asked Questions -->
+      <div class="p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+        <h2 class="text-xl font-bold text-white mb-4 flex items-center">
+          <i class="fa-solid fa-circle-question text-purple-400 mr-2.5 text-base"></i> Frequently Asked Questions in Interviews
+        </h2>
+        <ul class="space-y-2 text-xs text-slate-300">
+          {% for q in company.to_dict().sample_questions %}
+          <li class="p-3 rounded-lg bg-slate-950/70 border border-slate-800/80 font-medium">
+            <i class="fa-solid fa-code text-indigo-400 mr-2"></i>{{ q }}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Sidebar (4 cols) -->
+    <div class="lg:col-span-4 space-y-6">
+      <!-- Eligibility Blueprint Box -->
+      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl">
+        <h3 class="text-sm font-bold text-white mb-4 flex items-center uppercase tracking-wider text-xs">
+          <i class="fa-solid fa-user-check text-indigo-400 mr-2"></i> Eligibility Guidelines
+        </h3>
+        <div class="space-y-3 text-xs text-slate-300">
+          {% for key, val in company.to_dict().eligibility.items() %}
+          <div class="pb-2.5 border-b border-slate-800 last:border-b-0 last:pb-0">
+            <span class="block text-slate-500 font-semibold uppercase text-[10px] mb-0.5">{{ key|replace('_', ' ') }}</span>
+            <span class="leading-relaxed">{{ val }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Prep Quick Action Links -->
+      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 shadow-xl">
+        <h3 class="text-sm font-bold text-white mb-3">Prepare for {{ company.name }}</h3>
+        <p class="text-xs text-slate-400 mb-4 leading-relaxed">
+          Solve topic-wise interview problems and practice aptitude formulas to clear online tests.
+        </p>
+        <div class="space-y-2">
+          <a href="{{ url_for('prep', category='aptitude') }}" class="block w-full text-center py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs border border-slate-700 transition">
+            Practice Aptitude Questions
+          </a>
+          <a href="{{ url_for('dsa') }}" class="block w-full text-center py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-semibold text-xs transition">
+            Practice DSA Coding Sheet
+          </a>
+          <a href="{{ url_for('prep', category='hr') }}" class="block w-full text-center py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs border border-slate-700 transition">
+            Review HR Behavioral Answers
+          </a>
+        </div>
+      </div>
+
+      <!-- Other Top Companies -->
+      {% if other_companies %}
+      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 shadow-md">
+        <h3 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-4">Other Company Guides</h3>
+        <div class="space-y-3">
+          {% for oc in other_companies %}
+          <a href="{{ url_for('company_detail', slug=oc.slug) }}" class="p-3 rounded-xl bg-slate-950/70 border border-slate-800 hover:border-slate-700 transition block group">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-white group-hover:text-indigo-400 transition">{{ oc.name }}</span>
+              <span class="text-[11px] font-mono text-emerald-400">{{ oc.ctc_range.split('-')[0] }}</span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-1 line-clamp-1">{{ oc.tagline }}</p>
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

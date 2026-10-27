@@ -1,0 +1,377 @@
+{% extends 'base.html' %}
+
+{% block title %}Job Portal | Interview Preparation & Dedicated DSA Sheet{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28">
+  <!-- Background Glows -->
+  <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-indigo-600/15 blur-[120px] rounded-full pointer-events-none"></div>
+  <div class="absolute top-1/3 left-1/4 w-[300px] h-[250px] bg-cyan-500/10 blur-[100px] rounded-full pointer-events-none"></div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+    <!-- Batch Pill -->
+    <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-slate-800/90 border border-slate-700 text-xs font-medium text-slate-300 mb-6 shadow-inner">
+      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span>Engineered for 2025 - 2027 Campus Placements & Off-Campus Drives</span>
+      <span class="text-indigo-400 font-semibold">&bull; All Free</span>
+    </div>
+
+    <!-- Main Heading -->
+    <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white max-w-4xl mx-auto leading-tight sm:leading-none">
+      The Complete <span class="text-gradient">Job Portal</span> &amp; <span class="text-gradient-cyan">Prep Platform</span>
+    </h1>
+
+    <p class="mt-6 text-lg sm:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed">
+      Curated tech job openings, in-depth company hiring blueprints, core CS notes &amp; quizzes, and a topic-wise DSA interview tracker — all unified in one modern dashboard.
+    </p>
+
+    <!-- Hero CTA Buttons -->
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+      <a href="{{ url_for('jobs') }}" class="px-7 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-base shadow-lg shadow-indigo-600/30 transition flex items-center group">
+        <i class="fa-solid fa-briefcase mr-2.5"></i> Explore Tech Jobs
+        <i class="fa-solid fa-arrow-right ml-2 text-xs group-hover:translate-x-1 transition"></i>
+      </a>
+      <a href="{{ url_for('dsa') }}" class="px-7 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white font-semibold text-base border border-slate-700 transition flex items-center">
+        <i class="fa-solid fa-code mr-2.5 text-cyan-400"></i> Open DSA Sheet
+      </a>
+      <a href="{{ url_for('prep') }}" class="px-7 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white font-medium text-base border border-slate-800 transition flex items-center">
+        <i class="fa-solid fa-graduation-cap mr-2.5 text-indigo-400"></i> Prep Hub (Aptitude &amp; CS)
+      </a>
+    </div>
+
+    <!-- Platform Highlights Counter -->
+    <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+      <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
+        <div class="text-3xl font-extrabold text-white font-mono">{{ total_jobs }}+</div>
+        <div class="text-xs text-slate-400 mt-1 uppercase tracking-wider font-medium">Verified Tech Jobs</div>
+      </div>
+      <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
+        <div class="text-3xl font-extrabold text-cyan-400 font-mono">{{ total_dsa }}</div>
+        <div class="text-xs text-slate-400 mt-1 uppercase tracking-wider font-medium">Curated DSA Problems</div>
+      </div>
+      <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
+        <div class="text-3xl font-extrabold text-indigo-400 font-mono">100%</div>
+        <div class="text-xs text-slate-400 mt-1 uppercase tracking-wider font-medium">Exam Patterns &amp; Syllabus</div>
+      </div>
+      <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 backdrop-blur-sm">
+        <div class="text-3xl font-extrabold text-emerald-400 font-mono">4 Pillars</div>
+        <div class="text-xs text-slate-400 mt-1 uppercase tracking-wider font-medium">Aptitude, Tech, HR, DSA</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 Core Pillars Overview Section -->
+<section class="py-16 bg-slate-900/40 border-y border-slate-800/80">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-2xl mx-auto mb-12">
+      <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Everything You Need To Secure Your Next Offer</h2>
+      <p class="text-sm text-slate-400 mt-2">Built from real interview experiences across top service &amp; product companies.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Feature 1: Job Portal -->
+      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 card-hover flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-xl mb-4">
+            <i class="fa-solid fa-briefcase"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-2">Job Portal</h3>
+          <p class="text-xs text-slate-400 leading-relaxed mb-4">
+            Directly apply to high-paying Software Engineer, Frontend, Backend, AI/ML, and Cloud roles with transparent CTC breakdown and eligibility criteria.
+          </p>
+        </div>
+        <a href="{{ url_for('jobs') }}" class="text-xs font-semibold text-indigo-400 hover:text-indigo-300 inline-flex items-center">
+          Browse Active Jobs <i class="fa-solid fa-chevron-right ml-1 text-[10px]"></i>
+        </a>
+      </div>
+
+      <!-- Feature 2: Prep Hub -->
+      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 card-hover flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl mb-4">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-2">Preparation Hub</h3>
+          <p class="text-xs text-slate-400 leading-relaxed mb-4">
+            Structured notes &amp; timed practice tests for Quantitative Aptitude, Logical Reasoning, OS, DBMS, CN, OOP, and HR behavioral STAR questions.
+          </p>
+        </div>
+        <a href="{{ url_for('prep') }}" class="text-xs font-semibold text-emerald-400 hover:text-emerald-300 inline-flex items-center">
+          Start Practicing <i class="fa-solid fa-chevron-right ml-1 text-[10px]"></i>
+        </a>
+      </div>
+
+      <!-- Feature 3: Company Hiring Process -->
+      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 card-hover flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xl mb-4">
+            <i class="fa-solid fa-building"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-2">Companies Hiring</h3>
+          <p class="text-xs text-slate-400 leading-relaxed mb-4">
+            Complete exam blueprints for TCS (NQT/Prime), Amazon, Infosys, Microsoft, and Accenture with exact section timings, marking schemes, and syllabus.
+          </p>
+        </div>
+        <a href="{{ url_for('companies') }}" class="text-xs font-semibold text-amber-400 hover:text-amber-300 inline-flex items-center">
+          View Company Guides <i class="fa-solid fa-chevron-right ml-1 text-[10px]"></i>
+        </a>
+      </div>
+
+      <!-- Feature 4: DSA Sheet -->
+      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 card-hover flex flex-col justify-between">
+        <div>
+          <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 flex items-center justify-center text-xl mb-4">
+            <i class="fa-solid fa-code"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white mb-2">Dedicated DSA Sheet</h3>
+          <p class="text-xs text-slate-400 leading-relaxed mb-4">
+            Topic-wise curated sheet with interactive progress tracking, optimal time &amp; space complexities, multi-language solutions (Python, C++, Java), and notes.
+          </p>
+        </div>
+        <a href="{{ url_for('dsa') }}" class="text-xs font-semibold text-cyan-400 hover:text-cyan-300 inline-flex items-center">
+          Track DSA Progress <i class="fa-solid fa-chevron-right ml-1 text-[10px]"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Jobs Preview Section -->
+<section class="py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8">
+      <div>
+        <h2 class="text-2xl sm:text-3xl font-bold text-white">Latest Job Openings</h2>
+        <p class="text-sm text-slate-400 mt-1">Handpicked software roles hiring right now.</p>
+      </div>
+      <a href="{{ url_for('jobs') }}" class="mt-3 sm:mt-0 text-sm font-semibold text-indigo-400 hover:text-indigo-300 flex items-center">
+        View All Jobs <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+      {% for job in featured_jobs %}
+      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition flex flex-col justify-between shadow-lg">
+        <div>
+          <div class="flex items-start justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="w-12 h-12 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-xl font-bold text-indigo-400 overflow-hidden">
+                {% if job.company_logo %}
+                  <img src="{{ job.company_logo }}" alt="{{ job.company }}" class="w-8 h-8 object-contain" onerror="this.src=''; this.parentElement.textContent='{{ job.company[0] }}';">
+                {% else %}
+                  {{ job.company[0] }}
+                {% endif %}
+              </div>
+              <div>
+                <h3 class="text-base font-bold text-white hover:text-indigo-400 transition">
+                  <a href="{{ url_for('job_detail', job_id=job.id) }}">{{ job.title }}</a>
+                </h3>
+                <p class="text-xs text-slate-400 font-medium">{{ job.company }} &bull; {{ job.location }}</p>
+              </div>
+            </div>
+            <span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              {{ job.salary }}
+            </span>
+          </div>
+
+          <p class="mt-4 text-xs text-slate-300 line-clamp-2 leading-relaxed">
+            {{ job.description }}
+          </p>
+
+          <!-- Skills tags -->
+          <div class="mt-4 flex flex-wrap gap-1.5">
+            {% for skill in job.skills.split(',')[:4] %}
+            <span class="px-2 py-0.5 rounded text-[11px] font-mono bg-slate-800 text-slate-300 border border-slate-700">
+              {{ skill.strip() }}
+            </span>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-800/80 flex items-center justify-between text-xs">
+          <span class="text-slate-400"><i class="fa-regular fa-clock mr-1"></i> Apply by {{ job.deadline or 'Open' }}</span>
+          <div class="flex space-x-2">
+            <a href="{{ url_for('job_detail', job_id=job.id) }}" class="px-3 py-1.5 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 transition font-medium">
+              Details
+            </a>
+            <button data-job-id="{{ job.id }}" data-job-title="{{ job.title }}" data-company="{{ job.company }}" onclick="openApplyModalFromBtn(this)" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition">
+              Apply Now
+            </button>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- Company Hiring Blueprints Section -->
+<section class="py-16 bg-slate-900/60 border-t border-slate-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8">
+      <div>
+        <h2 class="text-2xl sm:text-3xl font-bold text-white">Companies Hiring Blueprints</h2>
+        <p class="text-sm text-slate-400 mt-1">Exam pattern, section timings, eligibility cutoffs, and syllabus.</p>
+      </div>
+      <a href="{{ url_for('companies') }}" class="mt-3 sm:mt-0 text-sm font-semibold text-amber-400 hover:text-amber-300 flex items-center">
+        Explore All Companies <i class="fa-solid fa-arrow-right ml-1.5 text-xs"></i>
+      </a>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {% for comp in companies %}
+      <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 card-hover flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-slate-800 text-slate-300 border border-slate-700">
+              {{ comp.category }}
+            </span>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded ${
+              comp.difficulty_level === 'Hard' ? 'text-rose-400 bg-rose-500/10' : 'text-amber-400 bg-amber-500/10'
+            }">
+              {{ comp.difficulty_level }}
+            </span>
+          </div>
+          <h3 class="text-lg font-bold text-white">{{ comp.name }}</h3>
+          <p class="text-xs text-indigo-400 font-semibold mt-1">{{ comp.ctc_range }}</p>
+          <p class="text-xs text-slate-400 mt-2 line-clamp-2">{{ comp.tagline }}</p>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-800 text-xs">
+          <p class="text-slate-400 mb-3"><strong class="text-slate-300">Eligibility:</strong> {{ comp.eligibility_summary }}</p>
+          <a href="{{ url_for('company_detail', slug=comp.slug) }}" class="block text-center py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold transition border border-slate-700">
+            View Hiring Process &rarr;
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- DSA Sheet Preview Section -->
+<section class="py-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/40 border border-slate-800 shadow-2xl relative overflow-hidden">
+      <!-- Decor -->
+      <div class="absolute -right-10 -bottom-10 w-72 h-72 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div class="lg:col-span-7">
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-semibold mb-4">
+            <i class="fa-solid fa-code"></i>
+            <span>Interactive Interview Tracker</span>
+          </div>
+          <h2 class="text-2xl sm:text-4xl font-extrabold text-white leading-tight">
+            Master Technical Coding with our Dedicated <span class="text-cyan-400">DSA Sheet</span>
+          </h2>
+          <p class="mt-3 text-sm sm:text-base text-slate-300 leading-relaxed">
+            Organized topic-wise into 12 essential pillars: Arrays, Two Pointers, Strings, Linked Lists, Stacks, Binary Search, Trees, Graphs, and DP. Track completed questions, mark tricky ones for revision, and view multi-language optimal solutions.
+          </p>
+
+          <div class="mt-6 flex flex-wrap gap-2 text-xs">
+            <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 border border-slate-700"><i class="fa-solid fa-check text-emerald-400 mr-1.5"></i>Optimal Approaches</span>
+            <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 border border-slate-700"><i class="fa-solid fa-code text-indigo-400 mr-1.5"></i>Python, C++, Java</span>
+            <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 border border-slate-700"><i class="fa-solid fa-star text-amber-400 mr-1.5"></i>Revision Bookmarking</span>
+            <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 border border-slate-700"><i class="fa-solid fa-note-sticky text-cyan-400 mr-1.5"></i>Personal Notes</span>
+          </div>
+
+          <div class="mt-8">
+            <a href="{{ url_for('dsa') }}" class="px-6 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-sm shadow-lg shadow-cyan-500/20 transition inline-flex items-center">
+              Open DSA Tracker <i class="fa-solid fa-arrow-right ml-2 text-xs"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="lg:col-span-5">
+          <div class="p-6 rounded-2xl bg-slate-950/80 border border-slate-800 shadow-xl">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-sm font-bold text-white">Sheet Completion</span>
+              <span class="text-sm font-mono font-bold text-cyan-400">{{ dsa_percent }}%</span>
+            </div>
+            <!-- Progress Bar -->
+            <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden mb-4">
+              <div class="h-full bg-gradient-to-r from-cyan-500 to-indigo-500 rounded-full transition-all duration-500" style="width: {{ dsa_percent }}%;"></div>
+            </div>
+            <div class="flex items-center justify-between text-xs text-slate-400 pt-3 border-t border-slate-800">
+              <span>Solved: <strong class="text-white">{{ solved_dsa }}</strong> of {{ total_dsa }}</span>
+              <span>Available Topics: <strong class="text-white">12 Categories</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Job Apply Modal (Included globally on home) -->
+<div id="apply-job-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+  <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden modal-enter">
+    <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+      <div>
+        <h3 class="text-lg font-bold text-white">Apply for Position</h3>
+        <p class="text-xs text-slate-400 mt-0.5"><span id="apply-modal-job-title" class="text-indigo-400 font-semibold"></span> at <span id="apply-modal-company" class="text-slate-200"></span></p>
+      </div>
+      <button onclick="closeApplyModal()" class="text-slate-400 hover:text-white p-1 transition">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+    </div>
+    
+    <form id="apply-job-form" class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Full Name *</label>
+        <input type="text" name="applicant_name" required placeholder="e.g. Rahul Sharma" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Email *</label>
+          <input type="email" name="email" required placeholder="rahul@example.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Phone Number *</label>
+          <input type="tel" name="phone" required placeholder="+91 9876543210" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">College / Institute</label>
+          <input type="text" name="college" placeholder="IIT / NIT / BITS / State Univ" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Graduation Batch</label>
+          <input type="text" name="grad_year" placeholder="2025 / 2026 / 2027" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Resume Link (Google Drive / Notion / Dropbox) *</label>
+        <input type="url" name="resume_link" required placeholder="https://drive.google.com/your-resume-pdf" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">GitHub Profile</label>
+          <input type="url" name="github_url" placeholder="https://github.com/username" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">LinkedIn Profile</label>
+          <input type="url" name="linkedin_url" placeholder="https://linkedin.com/in/username" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Cover Note / Why You're a Great Fit</label>
+        <textarea name="cover_note" rows="2" placeholder="Briefly highlight your core technical skills and relevant projects..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"></textarea>
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex justify-end space-x-3">
+        <button type="button" onclick="closeApplyModal()" class="px-4 py-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 text-xs font-semibold">Cancel</button>
+        <button type="submit" class="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-md shadow-indigo-600/30">Submit Application</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/jobs.js') }}"></script>
+{% endblock %}

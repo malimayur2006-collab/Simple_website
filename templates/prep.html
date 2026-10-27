@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block title %}Preparation Hub: Aptitude, Technical CS, HR & Quizzes | Job Portal{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+  <!-- Header Section -->
+  <div class="text-center max-w-3xl mx-auto mb-10">
+    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-3">
+      <i class="fa-solid fa-graduation-cap"></i>
+      <span>Placement &amp; Interview Prep Engine</span>
+    </div>
+    <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Tech Interview Preparation Hub</h1>
+    <p class="text-sm text-slate-400 mt-2 leading-relaxed">
+      Comprehensive theory notes, cheat sheets, formulas, and timed practice quizzes covering Aptitude, Core Computer Science subjects, and HR Behavioral Rounds.
+    </p>
+  </div>
+
+  <!-- Category Navigation Tabs -->
+  <div class="flex items-center justify-center space-x-2 sm:space-x-3 mb-8 border-b border-slate-800 pb-4 overflow-x-auto">
+    <a href="{{ url_for('prep', category='aptitude') }}" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center whitespace-nowrap {% if category == 'aptitude' %}bg-indigo-600 text-white shadow-lg shadow-indigo-600/20{% else %}bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800{% endif %}">
+      <i class="fa-solid fa-calculator mr-2"></i> Aptitude (Quant, Logical, Verbal)
+    </a>
+    <a href="{{ url_for('prep', category='technical') }}" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center whitespace-nowrap {% if category == 'technical' %}bg-indigo-600 text-white shadow-lg shadow-indigo-600/20{% else %}bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800{% endif %}">
+      <i class="fa-solid fa-microchip mr-2"></i> Technical (OS, DBMS, CN, OOP)
+    </a>
+    <a href="{{ url_for('prep', category='hr') }}" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition flex items-center whitespace-nowrap {% if category == 'hr' %}bg-indigo-600 text-white shadow-lg shadow-indigo-600/20{% else %}bg-slate-900 text-slate-300 hover:bg-slate-800 hover:text-white border border-slate-800{% endif %}">
+      <i class="fa-solid fa-user-tie mr-2"></i> HR &amp; Behavioral Prep
+    </a>
+  </div>
+
+  <!-- Sub-Category Filter Pills -->
+  <div class="flex flex-wrap items-center justify-center gap-2 mb-10">
+    <span class="text-xs text-slate-500 mr-1 font-semibold uppercase">Filter Topic:</span>
+    <a href="{{ url_for('prep', category=category) }}" class="px-3 py-1 rounded-lg text-xs font-medium transition {% if not current_sub %}bg-slate-800 text-white border border-indigo-500/40{% else %}bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800{% endif %}">
+      All {{ category|capitalize }} Topics
+    </a>
+
+    {% if category == 'aptitude' %}
+      {% for sub in aptitude_subs %}
+      <a href="{{ url_for('prep', category='aptitude', sub=sub) }}" class="px-3 py-1 rounded-lg text-xs font-medium transition {% if current_sub == sub %}bg-indigo-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800{% endif %}">
+        {{ sub|capitalize }}
+      </a>
+      {% endfor %}
+    {% elif category == 'technical' %}
+      {% for sub in technical_subs %}
+      <a href="{{ url_for('prep', category='technical', sub=sub) }}" class="px-3 py-1 rounded-lg text-xs font-medium uppercase transition {% if current_sub == sub %}bg-indigo-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800{% endif %}">
+        {{ sub }}
+      </a>
+      {% endfor %}
+    {% elif category == 'hr' %}
+      {% for sub in hr_subs %}
+      <a href="{{ url_for('prep', category='hr', sub=sub) }}" class="px-3 py-1 rounded-lg text-xs font-medium transition {% if current_sub == sub %}bg-indigo-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-slate-200 border border-slate-800{% endif %}">
+        {{ sub|replace('hr-', '')|capitalize }}
+      </a>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <!-- Layout: 2 Columns (Notes on Left / Timed Quiz Engine on Right) -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+    
+    <!-- Left Column: Notes & Cheatsheets -->
+    <div class="lg:col-span-7 space-y-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold text-white flex items-center">
+          <i class="fa-solid fa-book-bookmark text-indigo-400 mr-2 text-base"></i> Curated Study Notes &amp; Formulas
+        </h2>
+        <span class="text-xs text-slate-400">{{ topics|length }} Guides available</span>
+      </div>
+
+      <div class="space-y-4">
+        {% for topic in topics %}
+        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition shadow-lg card-hover">
+          <div class="flex items-center justify-between mb-3">
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-slate-800 text-indigo-300 border border-slate-700">
+              {{ topic.sub_category }}
+            </span>
+            <span class="text-xs text-slate-500 font-mono"><i class="fa-regular fa-clock mr-1"></i>{{ topic.read_time }}</span>
+          </div>
+
+          <h3 class="text-lg font-bold text-white hover:text-indigo-400 transition">
+            <a href="{{ url_for('prep_detail', slug=topic.slug) }}">{{ topic.title }}</a>
+          </h3>
+
+          <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+            {{ topic.summary }}
+          </p>
+
+          <div class="mt-5 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+            <span class="text-xs text-emerald-400 font-medium"><i class="fa-solid fa-check-circle mr-1"></i>Exam Ready Cheat Sheet</span>
+            <a href="{{ url_for('prep_detail', slug=topic.slug) }}" class="text-xs font-semibold text-indigo-400 hover:text-indigo-300 flex items-center">
+              Read Complete Notes <i class="fa-solid fa-arrow-right ml-1.5 text-[10px]"></i>
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Right Column: Interactive Practice Quiz Engine -->
+    <div class="lg:col-span-5">
+      <div class="sticky top-24 space-y-6">
+
+        <!-- Quiz Intro Card -->
+        <div id="quiz-intro-card" class="p-6 sm:p-8 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl">
+          <div class="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center text-xl mb-4">
+            <i class="fa-solid fa-stopwatch-20"></i>
+          </div>
+          <h3 class="text-xl font-bold text-white">Timed Interactive Quiz</h3>
+          <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">
+            Test your knowledge against actual exam-standard multiple choice questions with immediate evaluation and detailed step-by-step reasoning.
+          </p>
+
+          <div class="mt-6 space-y-3 bg-slate-950/60 p-4 rounded-xl border border-slate-800 text-xs text-slate-300">
+            <div class="flex items-center justify-between">
+              <span>Category Selected:</span>
+              <strong class="text-white uppercase font-mono">{{ category }}</strong>
+            </div>
+            <div class="flex items-center justify-between">
+              <span>Sub-topic:</span>
+              <strong class="text-indigo-400 uppercase font-mono">{{ current_sub or 'All Combined' }}</strong>
+            </div>
+            <div class="flex items-center justify-between">
+              <span>Format:</span>
+              <span class="text-slate-400">Single Choice &bull; Instant Analysis</span>
+            </div>
+          </div>
+
+          <button onclick="startQuiz('{{ category }}', '{{ current_sub }}')" class="w-full mt-6 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-bold text-sm shadow-lg shadow-indigo-600/30 transition flex items-center justify-center">
+            <i class="fa-solid fa-play mr-2"></i> Start Practice Test
+          </button>
+        </div>
+
+        <!-- Quiz Active Runner Container (Injected by prep.js) -->
+        <div id="quiz-active-container" class="hidden"></div>
+
+        <!-- Quiz Summary Results Card (Injected by prep.js) -->
+        <div id="quiz-summary-card" class="hidden"></div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/prep.js') }}"></script>
+{% endblock %}
