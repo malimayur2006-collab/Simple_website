@@ -125,7 +125,7 @@ python app.py
 
 Open your browser and visit:
 
-**http://127.0.0.1:5000**
+https://simple-website-gamma-ashy.vercel.app
 
 🎉 Your Placement Preparation Portal should now be running locally.
 
